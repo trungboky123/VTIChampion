@@ -4,7 +4,7 @@ import lombok.Data;
 
 @Data
 public class AnswerResponse {
-    private Integer id;
+    private Integer answerId;
     private String content;
     private Boolean isCorrect;
 }

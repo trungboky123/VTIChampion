@@ -1,6 +1,11 @@
 spring:
   application:
     name: back-end
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.security.autoconfigure.SecurityAutoConfiguration
+      - org.springframework.boot.security.autoconfigure.UserDetailsServiceAutoConfiguration
+      - org.springframework.boot.security.autoconfigure.web.servlet.SecurityFilterAutoConfiguration
 
   # Kết nối MySQL
   datasource:
@@ -17,12 +22,4 @@ spring:
       hibernate:
         format_sql: true
 
-  data:
-    web:
-      pageable:
-        default-page-size: 10
-        one-indexed-parameters: true
-        size-parameter: size
-        page-parameter: page
-      sort:
-        sort-parameter: sort
+

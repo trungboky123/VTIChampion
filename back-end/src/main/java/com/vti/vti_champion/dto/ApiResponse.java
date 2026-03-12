@@ -1,4 +1,4 @@
-package com.vti.vti_champion.dto.response;
+package com.vti.vti_champion.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;

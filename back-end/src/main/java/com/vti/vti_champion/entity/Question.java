@@ -2,41 +2,44 @@ package com.vti.vti_champion.entity;
 
 import com.vti.vti_champion.constant.DifficultyLevel;
 import jakarta.persistence.*;
+import lombok.Builder;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.CurrentTimestamp;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Data
 @Table(name = "question")
+@Data
 public class Question {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "question_id")
     private Integer id;
 
-    @Column(columnDefinition = "TEXT", nullable = false)
+    @Column(name = "content", columnDefinition = "TEXT", nullable = false)
     private String content;
 
-    @Column(name = "difficulty_level")
     @Enumerated(EnumType.STRING)
+    @Column(name = "difficulty_level", nullable = false)
     private DifficultyLevel difficultyLevel;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "category_id")
-    private CategoryQuestion categoryQuestion;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private User user; // Đây là Instructor tạo câu hỏi
-
-    @Column(name = "create_date", updatable = false)
-    @CreationTimestamp
+    @CurrentTimestamp
+    @Column(name = "create_date")
     private LocalDateTime createDate;
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "exam_id")
+    private Exam exam;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "creator_id")
+    private User creator;
+
+    // Quan hệ với Answer (Một câu hỏi có nhiều câu trả lời)
+    // CascadeType.ALL: Khi lưu Question sẽ tự động lưu các Answer đi kèm
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Answer> answers;
 }

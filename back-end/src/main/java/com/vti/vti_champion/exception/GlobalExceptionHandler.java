@@ -1,6 +1,6 @@
 package com.vti.vti_champion.exception;
 
-import com.vti.vti_champion.dto.response.ApiResponse;
+import com.vti.vti_champion.dto.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -1,7 +1,5 @@
 package com.vti.vti_champion.entity;
 
-import com.vti.vti_champion.constant.Role;
-import com.vti.vti_champion.entity.Clazz;
 import jakarta.persistence.*;
 import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
@@ -15,40 +13,36 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Integer id;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "email", length = 100, unique = true, nullable = false)
     private String email;
 
-    @Column(unique = true, nullable = false)
+    @Column(name = "username", length = 50, unique = true, nullable = false)
     private String username;
 
-    @Column(nullable = false)
+    @Column(name = "password", nullable = false)
     private String password;
 
-    @Column(name = "first_name", length = 50)
-    private String firstName;
+    @Column(name = "fullname", length = 50, nullable = false)
+    private String fullname;
 
-    @Column(name = "last_name", length = 50)
-    private String lastName;
-
-    @Enumerated(EnumType.STRING)
-    private Role role; //Admin, Teacher, Student
+    @Column(name = "avatar_url", columnDefinition = "TEXT")
+    private String avatarUrl;
 
     @Column(name = "is_active")
     private Boolean isActive = true;
 
-    private Boolean status = true;
-
     @Column(name = "create_date", updatable = false)
-    @CreationTimestamp
+    @CreationTimestamp // lấy thời gian hiện tại
     private LocalDateTime createDate;
 
-    @ManyToOne
-    @JoinColumn(name = "class_id")
-    private Clazz clazz;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id", nullable = false)
+    private Setting role;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "department_id")
-    private Department department;
+    private Setting department;
 }
