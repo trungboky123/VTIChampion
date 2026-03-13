@@ -1,3 +1,25 @@
 spring:
   application:
     name: back-end
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.security.autoconfigure.SecurityAutoConfiguration
+      - org.springframework.boot.security.autoconfigure.UserDetailsServiceAutoConfiguration
+      - org.springframework.boot.security.autoconfigure.web.servlet.SecurityFilterAutoConfiguration
+
+  # Kết nối MySQL
+  datasource:
+    url: jdbc:mysql://mysql-cda59c1-vtichampion.i.aivencloud.com:28921/vti_champion
+    username: avnadmin
+    password: ${DB_PASSWORD}
+
+  # Cấu hình Hibernate/JPA
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+
