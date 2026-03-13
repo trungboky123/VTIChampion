@@ -1,5 +1,6 @@
 package com.vti.vti_champion.dto.response;
 
+import com.vti.vti_champion.entity.Setting;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,8 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AnswerResponse {
-    private Integer answerId;
-    private String content;
-    private Boolean isCorrect;
+public class SettingResponse {
+    private Integer id;
+    private String name;
+    private Setting setting;
 }

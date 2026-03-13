@@ -1,0 +1,10 @@
+package com.vti.vti_champion.dto.request;
+
+import lombok.Data;
+
+@Data
+public class LoginRequest {
+    private String usernameOrEmail;
+    private String password;
+    private boolean rememberMe;
+}

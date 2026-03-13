@@ -18,6 +18,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/exams")
+@CrossOrigin("*")
 public class ExamController {
     private final ExamService examService;
 
@@ -28,7 +29,7 @@ public class ExamController {
         return ResponseEntity.ok(Map.of("message", "Tạo mới Exam thành công!"));
     }
 
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<Page<ExamResponse>> getAllExams(
             @RequestParam(required = false) String keyworld,
             @RequestParam(required = false) Integer classId,
