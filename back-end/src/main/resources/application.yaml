@@ -15,7 +15,7 @@ spring:
   datasource:
     url: jdbc:mysql://mysql-cda59c1-vtichampion.i.aivencloud.com:28921/vti_champion
     username: avnadmin
-    password: ${DB_PASSWORD}
+    password: AVNS_IPs1JxjzELk2vNN7oXx
 
   # Cấu hình Hibernate/JPA
   jpa:
