@@ -18,11 +18,11 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/exams")
-@CrossOrigin("*")
+@CrossOrigin("http://localhost:3000")
 public class ExamController {
     private final ExamService examService;
 
-    @PostMapping
+    @PostMapping("/create-exam")
     public ResponseEntity<?> createExam(@Valid @RequestBody CreateExamRequest request) {
         System.out.println("Dữ liệu nhận được: " + request.toString());
         examService.createExam(request);

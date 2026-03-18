@@ -1,83 +1,73 @@
 package com.vti.vti_champion.controller;
 
-import com.vti.vti_champion.configuration.JwtService;
 import com.vti.vti_champion.dto.request.LoginRequest;
-import com.vti.vti_champion.entity.RefreshToken;
+import com.vti.vti_champion.dto.request.RegisterRequest;
 import com.vti.vti_champion.entity.User;
-import com.vti.vti_champion.service.interfaces.IRefreshTokenService;
+import com.vti.vti_champion.service.classes.OtpService;
+import com.vti.vti_champion.service.interfaces.IAuthService;
 import com.vti.vti_champion.service.interfaces.IUserService;
-import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.context.MessageSource;
-import org.springframework.context.i18n.LocaleContextHolder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("api/v1/auth")
+@CrossOrigin("http://localhost:3000")
 @RequiredArgsConstructor
 @Validated
+@Slf4j
 public class AuthController {
-    private final AuthenticationManager authenticationManager;
     private final IUserService userService;
-    private final JwtService  jwtService;
-    private final IRefreshTokenService refreshTokenService;
-    private final MessageSource messageSource;
+    private final IAuthService authService;
+    private final OtpService otpService;
 
     @PostMapping("/login")
     public ResponseEntity<?> login (@RequestBody LoginRequest request, HttpServletResponse response) {
-        Locale locale = LocaleContextHolder.getLocale();
+        Map<String, Object> result = authService.login(request, response);
+        return ResponseEntity.ok(result);
+    }
 
+    @PostMapping("/register")
+    public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
         try {
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsernameOrEmail(), request.getPassword()));
-
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            User user = userService.getUserByUsername(userDetails.getUsername());
-
-            String accessToken = jwtService.generateAccessToken(userDetails);
-            RefreshToken token = refreshTokenService.createRefreshToken(user);
-
-            Cookie cookie1 = new Cookie("refreshToken", token.getToken());
-            cookie1.setHttpOnly(true);
-            cookie1.setSecure(true);
-            cookie1.setPath("/");
-            if (request.isRememberMe()) {
-                cookie1.setMaxAge(30 * 24 * 60 * 60);
-            }
-            else {
-                cookie1.setMaxAge(24 * 60 * 60);
-            }
-
-            Cookie cookie2 = new Cookie("accessToken", accessToken);
-            cookie2.setHttpOnly(true);
-            cookie1.setSecure(false);
-            cookie2.setPath("/");
-            cookie2.setMaxAge(15 * 60);
-
-            response.addCookie(cookie1);
-            response.addCookie(cookie2);
-
+            User savedUser = userService.register(request);
             return ResponseEntity.ok(Map.of(
-                    "message", messageSource.getMessage("login.success",null, locale),
-                    "accessToken", accessToken
+                    "message", "Register successfully!"
             ));
-
-        } catch (BadCredentialsException e) {
-            throw new BadCredentialsException("password.incorrect");
+        } catch (RuntimeException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
+       authService.logout(request, response);
+
+       return  ResponseEntity.ok(Map.of("message", "Logout successfully!"));
+
+    }
+
+    @PostMapping("/verify-email")
+    public ResponseEntity<?> forgotPassword(@RequestParam String email) {
+        boolean result = userService.findUserByEmail(email);
+        if (result) {
+            otpService.sendCode(email);
+
+            return ResponseEntity.ok(Map.of(
+                    "message", "Verification Code has been sent to your email!"
+            ));
+        }
+
+        return ResponseEntity.badRequest().body(Map.of(
+                "message", "Account not found!"
+        ));
+    }
+
 }

@@ -6,17 +6,29 @@ jwt:
 spring:
   application:
     name: back-end
-#  autoconfigure:
-#    exclude:
-#      - org.springframework.boot.security.autoconfigure.SecurityAutoConfiguration
-#      - org.springframework.boot.security.autoconfigure.UserDetailsServiceAutoConfiguration
-#      - org.springframework.boot.security.autoconfigure.web.servlet.SecurityFilterAutoConfiguration
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: anhn58022@gmail.com
+    password: uvru mnsc rpgc ewyb
+    properties:
+      mail:
+        debug: false
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
   # Kết nối MySQL
   datasource:
     url: ${DB_URL}
     username: ${DB_USER}
     password: ${DB_PASSWORD}
+
 
   # Cấu hình Hibernate/JPA
   jpa:
@@ -31,5 +43,7 @@ cloudinary:
   cloud-name: dxcl0xspi
   api-key: 211214697518363
   api-secret: Fv5oyDxkwVIljQ5EdfDnvf7lZ-4
-
+logging:
+  level:
+    org.springframework.security: DEBUG
 
