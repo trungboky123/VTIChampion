@@ -1,4 +1,9 @@
 package com.vti.vti_champion.dto.request;
 
-public class otpRequest {
+import lombok.Data;
+
+@Data
+public class OtpRequest {
+    private String email;
+    private String code;
 }
