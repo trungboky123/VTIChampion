@@ -12,6 +12,7 @@ const authApi = {
     return axiosClient.post(`/auth/register`, data);
   },
 
+  // verify
   verifyCode: ({ email, code }) => {
     return axiosClient.post(`/auth/verify-code`, { email, code });
   },
