@@ -23,31 +23,30 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
-
-    @Lazy
-    private final JwtFilter jwtAuthenticationFilter;
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, UserDetailsService userDetailsService, JwtFilter jwtFilter) throws Exception {
         httpSecurity
                 // Disable old function
                 .csrf(AbstractHttpConfigurer::disable)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
                 // Cors
                 .cors(Customizer.withDefaults())
                 // Stateless
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // Authorization
+//                .authorizeHttpRequests(auth -> auth
+//                        // Những API công khai (không cần login)
+//                        .requestMatchers("/api/v1/auth/*").permitAll()
+//                        .requestMatchers("/api/v1/users/me").permitAll()
+//                        .requestMatchers("/api/v1/exams/create-exam").hasRole("Admin")
+//                        .requestMatchers("/error").permitAll()
+//                        .requestMatchers("/api/v1/auth/logout").authenticated() // Chỉ user đã login mới được logout
+//                        .anyRequest().authenticated()
+//                )
                 .authorizeHttpRequests(auth -> auth
-                        // Những API công khai (không cần login)
-                        .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/api/v1/users/me").permitAll()
-                        .requestMatchers("/api/v1/exams/").hasRole("Admin")
-                        .requestMatchers("").hasRole("Admin")
-                        .requestMatchers("/error").permitAll()
-                        .requestMatchers("/api/v1/auth/logout").authenticated() // Chỉ user đã login mới được logout
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 // UserDetailsService
                 .userDetailsService(userDetailsService)
@@ -81,7 +80,7 @@ public class SecurityConfig {
 
     // Đăng ký AuthenticationManager để dùng trong AuthController
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) {
         return authConfig.getAuthenticationManager();
     }
 
@@ -89,4 +88,5 @@ public class SecurityConfig {
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
 }

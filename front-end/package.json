@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/icons": "^6.1.0",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
@@ -15,9 +16,12 @@
     "react-router-dom": "^7.13.1",
     "react-scripts": "5.0.1",
     "sass": "^1.98.0",
+    "toasty": "^6.0.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "prestart": "npx -y copyfiles -u 1 \"src/mcq/**/*\" public",
+    "prebuild": "npx -y copyfiles -u 1 \"src/mcq/**/*\" public",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",

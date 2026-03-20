@@ -1,0 +1,111 @@
+.login-container {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f3f4f6;
+}
+
+.login-content {
+  display: flex;
+  width: 1000px;
+  max-width: 95%;
+  height: 650px;
+  background: #fff;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Cột Trái */
+.login-brand-section {
+  flex: 1;
+  background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  /* Blue Gradient */
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  color: white;
+}
+
+.brand-info {
+  position: relative;
+  z-index: 2;
+  text-align: left;
+}
+
+.brand-title {
+  font-size: 32px;
+  font-weight: 800;
+  margin: 20px 0 10px;
+}
+
+.brand-subtitle {
+  font-size: 16px;
+  opacity: 0.9;
+  line-height: 1.6;
+}
+
+.brand-features {
+  margin-top: 30px;
+}
+
+.feature-item {
+  margin-bottom: 12px;
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 8px 15px;
+  border-radius: 50px;
+}
+
+/* Cột Phải */
+.login-form-section {
+  flex: 1.1;
+  padding: 60px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.form-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 8px;
+}
+
+.form-header p {
+  color: #6b7280;
+  margin-bottom: 30px;
+}
+
+.password-label {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.input-icon {
+  color: #9ca3af;
+}
+
+.login-btn {
+  height: 48px !important;
+  font-weight: 600 !important;
+  border-radius: 8px !important;
+  background: #2563eb !important;
+  margin-top: 10px;
+}
+
+.register-link {
+  text-align: center;
+  margin-top: 25px;
+  color: #6b7280;
+}
+
+.register-link a {
+  color: #2563eb;
+  font-weight: 600;
+}
