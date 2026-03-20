@@ -1,6 +1,7 @@
 package com.vti.vti_champion.service.interfaces;
 
 import com.vti.vti_champion.dto.request.RegisterRequest;
+import com.vti.vti_champion.dto.request.ResetPasswordRequest;
 import com.vti.vti_champion.dto.request.UpdateUserRequest;
 import com.vti.vti_champion.dto.response.UserResponse;
 import com.vti.vti_champion.entity.User;
@@ -13,4 +14,5 @@ public interface IUserService {
     User updateMe(Integer userId, UpdateUserRequest request, MultipartFile avatar);
     boolean findUserByEmail(String email);
     Page<UserResponse> getAllUsers(org.springframework.data.domain.Pageable pageable);
+    void resetPassword(String email, String code, String newPassword);
 }
