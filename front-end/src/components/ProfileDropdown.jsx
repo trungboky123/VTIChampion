@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import "../styles/ProfileDropdown.css";
-import userApi from "../api/userApi";
+import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import '../styles/ProfileDropdown.css';
 
 const ProfileDropdown = ({ children }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const { user, logout } = useAuth();
   const dropdownRef = useRef(null);
   const navigate = useNavigate();
 
@@ -21,37 +20,19 @@ const ProfileDropdown = ({ children }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Gọi API lấy thông tin profile từ Database khi component mount
-  useEffect(() => {
-    const fetchUserProfile = async () => {
-      const token =
-        localStorage.getItem("token") || sessionStorage.getItem("token");
-      if (!token) return; // Nếu chưa đăng nhập thì không gọi lấy profile
-
-      try {
-        setLoading(true);
-        const data = await userApi.getProfile();
-        setUser(data.data || data);
-      } catch (error) {
-        console.error("Lỗi khi lấy thông tin user từ DB:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserProfile();
-  }, []);
-
   const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
-    window.location.href = "/login";
+    logout();
   };
 
   const goToProfile = () => {
     setIsOpen(false);
-    // Thay đổi đường dẫn này trỏ đến trang Profile thực tế của bạn
-    navigate("/profile");
+    if (user.role === 'ADMIN') {
+        navigate('/admin/profile');
+    } else if (user.role === 'TEACHER') {
+        navigate('/teacher/profile');
+    } else {
+        navigate('/profile'); 
+    }
   };
 
   return (
@@ -93,16 +74,7 @@ const ProfileDropdown = ({ children }) => {
 
       {isOpen && (
         <div className="profile-dropdown-menu">
-          {loading ? (
-            <div
-              className="profile-info"
-              style={{ justifyContent: "center", padding: "16px" }}
-            >
-              <span style={{ fontSize: "13px", color: "#6b7280" }}>
-                Đang tải thông tin...
-              </span>
-            </div>
-          ) : user ? (
+          {user ? (
             <>
               <div
                 className="profile-info profile-info-clickable"
@@ -137,15 +109,9 @@ const ProfileDropdown = ({ children }) => {
                   )}
                 </div>
                 <div className="profile-details">
-                  <span className="profile-name">
-                    {user.fullname || user.username || "Người dùng"}
-                  </span>
-                  <span className="profile-email">
-                    {user.email || "Click để xem hồ sơ"}
-                  </span>
-                  {user.role?.name && (
-                    <span className="profile-role">{user.role.name}</span>
-                  )}
+                  <span className="profile-name">{user.fullname || user.username || 'Người dùng'}</span>
+                  <span className="profile-email">{user.email || 'Click để xem hồ sơ'}</span>
+                  {user.role && <span className="profile-role">{user.role}</span>}
                 </div>
               </div>
 
