@@ -12,7 +12,7 @@ export default function Login() {
   const { login } = useAuth();
   const [loading, setLoading] = useState(false);
 
-  const onLogin = async (values) => {
+  const handleLogin = async (values) => {
     setLoading(true);
     try {
       const res = await authApi.login(values);
@@ -81,7 +81,7 @@ export default function Login() {
           </div>
 
           <Form
-            onFinish={onLogin}
+            onFinish={handleLogin}
             layout="vertical"
             className="modern-form"
             size="large"
@@ -101,19 +101,32 @@ export default function Login() {
               label={
                 <div className="password-label">
                   <span>Mật khẩu</span>
-                  <a href="/forgot">Quên mật khẩu?</a>
                 </div>
               }
               name="password"
               rules={[{ required: true, message: "Vui lòng nhập mật khẩu!" }]}
+              style={{ marginBottom: "4px" }}
             >
               <Input.Password
                 prefix={<LockOutlined className="input-icon" />}
-                placeholder="••••••••"
+                placeholder="************"
               />
             </Form.Item>
 
-            <Form.Item name="rememberMe" valuePropName="checked">
+            <div style={{ textAlign: "right" }}>
+              <a
+                href="/forgot-password"
+                style={{ fontSize: "13px", color: "#1890ff" }}
+              >
+                Quên mật khẩu?
+              </a>
+            </div>
+
+            <Form.Item
+              name="rememberMe"
+              valuePropName="checked"
+              style={{ marginBottom: "20px" }}
+            >
               <Checkbox>Ghi nhớ đăng nhập</Checkbox>
             </Form.Item>
 
