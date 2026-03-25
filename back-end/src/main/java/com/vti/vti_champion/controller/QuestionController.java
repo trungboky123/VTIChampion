@@ -3,6 +3,7 @@ package com.vti.vti_champion.controller;
 import com.vti.vti_champion.configuration.CustomUserDetails;
 import com.vti.vti_champion.dto.request.CreateQuestionRequest;
 import com.vti.vti_champion.dto.request.UpdateQuestionRequest;
+import com.vti.vti_champion.dto.response.AnswerResponse;
 import com.vti.vti_champion.dto.response.QuestionResponse;
 import com.vti.vti_champion.entity.Question;
 import com.vti.vti_champion.service.classes.QuestionService;
@@ -81,5 +82,15 @@ public class QuestionController {
         questionService.deleteQuestionByTeacher(id, currentTeacherid);
 
         return ResponseEntity.ok(Map.of("messsage", "Xoa cau hoi thanh cong"));
+    }
+
+    @GetMapping("/check-question")
+    public ResponseEntity<?> checkQuestion(Authentication authentication, @RequestParam Integer questionId, @RequestParam Integer answerId) {
+        if (authentication == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Chua dang nhap");
+        }
+
+        boolean result = questionService.checkResult(questionId, answerId);
+        return ResponseEntity.ok(Map.of("result", result));
     }
 }

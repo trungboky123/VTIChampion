@@ -48,6 +48,20 @@ public class QuestionService implements IQuestionService {
     }
 
     @Override
+    public boolean checkResult(Integer questionId, Integer answerId) {
+        Question question = questionRepository.findById(questionId).orElseThrow(() -> new RuntimeException("Question not found"));
+
+        boolean result = false;
+        for(Answer answer : question.getAnswers()) {
+            if(answer.getId().equals(answerId)) {
+                result = answer.getIsCorrect();
+                break;
+            }
+        }
+        return result;
+    }
+
+    @Override
     public QuestionResponse createQuestionByTeacher(Integer teacherId, CreateQuestionRequest request) {
         // 1. Tìm thông tin giáo viên tạo
         User creator = userRepository.findById(teacherId)
