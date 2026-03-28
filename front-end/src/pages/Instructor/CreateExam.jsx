@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { createExam } from '../../api/examService';
 import classApi from '../../api/classApi';
+import userApi from '../../api/userApi';
 import questionApi from '../../api/questionApi';
 import { message, Modal, Checkbox, Space, Tag } from 'antd';
 
@@ -30,11 +31,26 @@ export default function CreateExam() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        // Lấy profile để xác định danh tính giáo viên
+        const userRes = await userApi.getProfile();
+        const profile = userRes.data || userRes;
+        const teacherId = profile?.id || profile?.userId;
+
         const [classesData, questionsData] = await Promise.all([
-          classApi.getAll(),
+          classApi.getAll({ teacher_id: teacherId }),
           questionApi.getMyQuestions({ size: 1000 })
         ]);
-        setClasses(Array.isArray(classesData) ? classesData : (classesData?.content || []));
+
+        let filteredClasses = Array.isArray(classesData) ? classesData : (classesData?.content || []);
+        
+        // Lọc theo tên giáo viên để đảm bảo tính chính xác
+        if (profile?.fullname) {
+          filteredClasses = filteredClasses.filter(cls => 
+            cls.teacherName && cls.teacherName.toLowerCase() === profile.fullname.toLowerCase()
+          );
+        }
+
+        setClasses(filteredClasses);
         setQuestionBank(questionsData?.content || (Array.isArray(questionsData) ? questionsData : []));
       } catch (error) {
         console.error("Lỗi khi tải dữ liệu:", error);

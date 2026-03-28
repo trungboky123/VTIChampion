@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getAllExams, deleteExam } from '../../api/examService';
+import examApi from '../../api/examApi';
 import resultApi from '../../api/resultApi';
-import { message, Modal } from 'antd';
+import userApi from '../../api/userApi';
+import { message, Modal, Pagination } from 'antd';
 
 import '../../styles/ExamList.css';
 
@@ -14,16 +15,41 @@ export default function ExamList() {
   
   const [searchTerm, setSearchTerm] = useState('');
   const [sortBy, setSortBy] = useState('newest');
+  const [scoreFilter, setScoreFilter] = useState('all');
 
   // Custom Modal State
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [examToDelete, setExamToDelete] = useState(null);
   const [isDeleting, setIsDeleting] = useState(false);
+  
+  // Pagination State
+  const [currentPage, setCurrentPage] = useState(1);
+  const [pageSize] = useState(6);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  const fetchCurrentUser = async () => {
+    try {
+      const res = await userApi.getProfile();
+      const profile = res.data || res;
+      setCurrentUser(profile);
+      return profile;
+    } catch (error) {
+      console.error("Lỗi lấy thông tin người dùng:", error);
+      return null;
+    }
+  };
 
   const fetchExamsAndStats = async () => {
     try {
       setLoading(true);
-      const data = await getAllExams({ size: 200 });
+
+      let user = currentUser;
+      if (!user) {
+        user = await fetchCurrentUser();
+      }
+
+      const res = await examApi.getAll({ size: 200, teacher_id: user?.id || undefined });
+      const data = res.data || res;
       const examsList = data.content || (Array.isArray(data) ? data : []);
       setExams(examsList);
 
@@ -61,7 +87,7 @@ export default function ExamList() {
     if (!examToDelete) return;
     try {
       setIsDeleting(true);
-      await deleteExam(examToDelete.id);
+      await examApi.delete(examToDelete.id);
       message.success("Đã xoá bài thi thành công!");
       setExams(prev => prev.filter(e => (e.examId || e.id) !== examToDelete.id));
       setIsDeleteModalOpen(false);
@@ -81,10 +107,19 @@ export default function ExamList() {
 
   const filteredAndSortedExams = [...exams]
     .filter(exam => {
+      const id = exam.examId || exam.id;
+      const stats = examStats[id] || { attempts: 0, avgScore: "0.0" };
+      
       const matchesSearch = 
         exam.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
         (exam.code && exam.code.toLowerCase().includes(searchTerm.toLowerCase()));
       if (!matchesSearch) return false;
+
+      if (scoreFilter === 'poor') return stats.attempts > 0 && Number(stats.avgScore) < 5;
+      if (scoreFilter === 'average') return stats.attempts > 0 && Number(stats.avgScore) >= 5 && Number(stats.avgScore) < 8;
+      if (scoreFilter === 'good') return stats.attempts > 0 && Number(stats.avgScore) >= 8;
+      if (scoreFilter === 'nodata') return stats.attempts === 0;
+      
       return true;
     })
     .sort((a, b) => {
@@ -98,6 +133,12 @@ export default function ExamList() {
       }
       return 0;
     });
+
+  const totalExams = filteredAndSortedExams.length;
+  const currentExams = filteredAndSortedExams.slice(
+    (currentPage - 1) * pageSize,
+    currentPage * pageSize
+  );
 
   return (
     <div className="exam-list-container" style={{ padding: 0 }}>
@@ -117,7 +158,7 @@ export default function ExamList() {
           <div><div className="stat-val">{totalExamsCount}</div><div className="stat-label">Tổng bài thi</div></div>
         </div>
         <div className="stat-item-box">
-          <div className="stat-icon-wrap" style={{ background: '#fef9c3' }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
+          <div className="stat-icon-wrap" style={{ background: '#fef9c3' }}><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
           <div><div className="stat-val">{totalAttempts}</div><div className="stat-label">Lượt làm bài</div></div>
         </div>
         <div className="stat-item-box">
@@ -136,13 +177,35 @@ export default function ExamList() {
             placeholder="Tìm theo tên hoặc mã bài thi..." 
             className="search-input-field" 
             value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
+            onChange={(e) => {
+              setSearchTerm(e.target.value);
+              setCurrentPage(1); 
+            }}
           />
         </div>
+        
+        <select 
+          className="filter-select"
+          value={scoreFilter}
+          onChange={(e) => {
+            setScoreFilter(e.target.value);
+            setCurrentPage(1);
+          }}
+        >
+          <option value="all">Tất cả điểm số</option>
+          <option value="good">Điểm Giỏi (&gt;= 8.0)</option>
+          <option value="average">Điểm Tr.Bình (5-8)</option>
+          <option value="poor">Điểm Yếu (&lt; 5.0)</option>
+          <option value="nodata">Chưa có lượt thi</option>
+        </select>
+
         <select 
           className="filter-select"
           value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
+          onChange={(e) => {
+            setSortBy(e.target.value);
+            setCurrentPage(1); 
+          }}
         >
           <option value="newest">Sắp xếp: Mới nhất</option>
           <option value="oldest">Sắp xếp: Cũ nhất</option>
@@ -164,11 +227,23 @@ export default function ExamList() {
 
           {loading ? (
             <div className="table-loading">Đang tải dữ liệu...</div>
-          ) : filteredAndSortedExams.length === 0 ? (
+          ) : currentExams.length === 0 ? (
             <div className="table-loading">Không tìm thấy bài thi nào.</div>
           ) : (
-            filteredAndSortedExams.map((exam, index) => {
+            currentExams.map((exam, index) => {
               const id = exam.examId || exam.id;
+              const stats = examStats[id] || { attempts: 0, avgScore: "0.0" };
+              
+              const getScoreClass = (score, attempts) => {
+                if (!attempts || attempts === 0) return 'na';
+                const s = Number(score);
+                if (s < 5) return 'poor';
+                if (s < 8) return 'average';
+                return 'good';
+              };
+
+              const scoreLevel = getScoreClass(stats.avgScore, stats.attempts);
+
               return (
                 <div key={id || index} className="table-row-custom">
                   <div>
@@ -177,9 +252,11 @@ export default function ExamList() {
                   </div>
                   <div className="exam-count-cell center">{exam.questions?.length || 0}</div>
                   <div className="exam-duration-cell center">{exam.duration || 0}p</div>
-                  <div className="exam-attempts-cell center">{examStats[id]?.attempts || 0}</div>
+                  <div className="exam-attempts-cell center">{stats.attempts}</div>
                   <div className="exam-score-cell center">
-                    <span className="score-badge">{examStats[id]?.avgScore || "0.0"}</span>
+                    <span className={`score-badge ${scoreLevel}`}>
+                      {stats.attempts > 0 ? stats.avgScore : "0.0"}
+                    </span>
                   </div>
                   <div className="exam-actions-cell">
                     <button onClick={() => navigate('/teacher/exams/' + id)} className="action-btn action-btn-view" title="Xem chi tiết">
@@ -197,6 +274,17 @@ export default function ExamList() {
             })
           )}
         </div>
+      </div>
+
+      <div className="pagination-wrapper" style={{ display: 'flex', justifyContent: 'center', marginTop: '24px', paddingBottom: '24px' }}>
+        <Pagination
+          current={currentPage}
+          total={totalExams}
+          pageSize={pageSize}
+          onChange={(page) => setCurrentPage(page)}
+          showSizeChanger={false}
+          className="custom-pagination"
+        />
       </div>
 
       {/* Custom Xanh - Trắng Modal */}

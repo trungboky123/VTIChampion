@@ -2,6 +2,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getAllExams } from '../../api/examService';
 import questionApi from '../../api/questionApi';
+import { message } from 'antd';
 import '../../styles/ExamDetail.css';
 import '../../styles/EditExam.css';
 import '../../styles/Home.css';
@@ -146,6 +147,7 @@ export default function ExamQuestions() {
                     ? { ...q, content: payload.content, difficultyLevel: payload.difficultyLevel, explanation: payload.explanation, answers: updated?.answers || payload.answers }
                     : q))
             );
+            message.success('Cập nhật câu hỏi thành công!');
             closeModal();
         } catch (e) {
             console.error('Update error:', e);
@@ -158,7 +160,10 @@ export default function ExamQuestions() {
     // ── Save Add ─────────────────────────────────────────
     const handleSaveAdd = async () => {
         const err = validate();
-        if (err) { setErrorMsg(err); return; }
+        if (err) {
+            setErrorMsg(err);
+            return;
+        }
         setSaving(true);
         setErrorMsg('');
         try {
@@ -166,13 +171,16 @@ export default function ExamQuestions() {
                 content: form.content.trim(),
                 difficultyLevel: form.difficultyLevel,
                 explanation: form.explanation.trim() || 'N/A',
-                examId: Number(examId),   // ← gắn câu hỏi mới vào đúng bài thi
-                answers: form.answers.map(a => ({ content: a.content.trim(), isCorrect: a.isCorrect }))
+                examId: Number(examId),
+                answers: form.answers.map(a => ({
+                    content: a.content.trim(),
+                    isCorrect: a.isCorrect
+                }))
             };
-            console.log('POST question', payload);
             const created = await questionApi.createQuestion(payload);
             if (created) {
                 setQuestions(prev => [...prev, created]);
+                message.success('Thêm câu hỏi mới thành công!');
             }
             closeModal();
         } catch (e) {
@@ -190,6 +198,7 @@ export default function ExamQuestions() {
         try {
             await questionApi.deleteQuestion(qId);
             setQuestions(prev => prev.filter(x => getQId(x) !== qId));
+            message.success('Xóa câu hỏi thành công!');
         } catch (e) {
             alert('Xóa thất bại: ' + (typeof e === 'string' ? e : 'Kiểm tra quyền hạn giảng viên.'));
         }
@@ -294,7 +303,7 @@ export default function ExamQuestions() {
                             )}
 
                             {/* Độ khó */}
-                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '12px' }}>
                                 <div>
                                     <label className="form-label">Độ khó</label>
                                     <select
@@ -305,11 +314,6 @@ export default function ExamQuestions() {
                                         <option value="MEDIUM">Trung bình (Medium)</option>
                                         <option value="HARD">Khó (Hard)</option>
                                     </select>
-                                </div>
-                                <div>
-                                    <label className="form-label">ID câu hỏi</label>
-                                    <input className="form-input form-input-disabled" disabled
-                                        value={modalType === 'edit' ? (getQId(currentQ) || 'Chưa có') : 'Tự động tạo'} />
                                 </div>
                             </div>
 

@@ -31,7 +31,15 @@ export default function Login() {
         login(userData, res.accessToken);
 
         message.success("Đăng nhập thành công!");
-        navigate("/");
+        
+        // Điều hướng trực tiếp dựa theo Role
+        if (userData.role === "TEACHER") {
+          navigate("/teacher/dashboard");
+        } else if (userData.role === "ADMIN") {
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/");
+        }
       }
     } catch (err) {
       console.error(err);
@@ -41,19 +49,6 @@ export default function Login() {
     }
   };
 
-  const handleMockLogin = (role) => {
-    const mockUser = {
-      id: 99,
-      username: `mock_${role.toLowerCase()}`,
-      fullname: `Mock ${role}`,
-      email: `${role.toLowerCase()}@test.com`,
-      role: role,
-      avatarUrl: null
-    };
-    login(mockUser, "mock-token-xyz");
-    message.info(`Mock login as ${role}`);
-    navigate("/");
-  };
 
   return (
     <div className="login-container">
@@ -147,13 +142,6 @@ export default function Login() {
               <a onClick={() => navigate("/register")}>Đăng ký ngay</a>
             </div>
 
-            <Divider style={{ margin: '20px 0' }}>Hoặc Đăng nhập nhanh (Mock)</Divider>
-            
-            <div style={{ display: 'flex', gap: '8px', justifyContent: 'center' }}>
-              <Button size="small" onClick={() => handleMockLogin('ADMIN')}>Admin</Button>
-              <Button size="small" onClick={() => handleMockLogin('TEACHER')}>Teacher</Button>
-              <Button size="small" onClick={() => handleMockLogin('STUDENT')}>Student</Button>
-            </div>
           </Form>
         </div>
       </div>

@@ -33,6 +33,9 @@ import EditExam from "../pages/Instructor/EditExam";
 import ExamDetail from "../pages/Instructor/ExamDetail";
 import ExamQuestions from "../pages/Instructor/ExamQuestions";
 import ClassList from "../pages/Instructor/ClassList";
+import ClassDetail from "../pages/Instructor/ClassDetail";
+import TeacherDashboard from "../pages/Instructor/TeacherDashboard";
+import HelpCenter from "../pages/Instructor/HelpCenter";
 
 // HomeRedirect để điều hướng user về đúng workspace
 const HomeRedirect = () => {
@@ -40,7 +43,7 @@ const HomeRedirect = () => {
   if (!user) return <Navigate to="/login" replace />;
 
   if (user.role === "ADMIN") return <Navigate to="/admin/dashboard" replace />;
-  if (user.role === "TEACHER") return <Navigate to="/teacher/exams" replace />;
+  if (user.role === "TEACHER") return <Navigate to="/teacher/dashboard" replace />;
   return <Navigate to="/home" replace />;
 };
 
@@ -136,7 +139,7 @@ const AppRoutes = () => {
         <Route index element={<Navigate to="dashboard" replace />} />
         <Route
           path="dashboard"
-          element={<GenericAdminPage title="Bảng điều khiển Giảng viên" />}
+          element={<TeacherDashboard />}
         />
         <Route path="exams" element={<ExamList />} />
         <Route path="exams/create" element={<CreateExam />} />
@@ -148,10 +151,10 @@ const AppRoutes = () => {
           element={<ClassList />}
         />
         <Route
-          path="reports"
-          element={<GenericAdminPage title="Báo cáo kết quả" />}
+          path="students/:classId"
+          element={<ClassDetail />}
         />
-        <Route path="questions" element={<QuestionManagement />} />
+        <Route path="help" element={<HelpCenter />} />
         <Route
           path="notifications"
           element={<GenericAdminPage title="Thông báo Giảng viên" />}

@@ -105,7 +105,7 @@ public class ExamService implements IExamService {
 
     @Override
     public Page<ExamResponse> getAllExams(
-            String keyword, Integer classId, Integer creatorId,
+            String keyword, Integer classId, Integer teacherId,
             LocalDate startDate, LocalDate endDate, Pageable pageable) {
 
         LocalDateTime start = (startDate != null) ? startDate.atStartOfDay() : null;
@@ -113,7 +113,7 @@ public class ExamService implements IExamService {
 
         Specification<Exam> spec = Specification.where(ExamSpecification.hasKeyword(keyword))
                 .and(ExamSpecification.hasClassId(classId))
-                .and(ExamSpecification.hasCreatorId(creatorId))
+                .and(ExamSpecification.hasCreatorId(teacherId))
                 .and(ExamSpecification.createdBeetween(start, end));
 
         return examRepository.findAll(spec, pageable).map(exam -> {

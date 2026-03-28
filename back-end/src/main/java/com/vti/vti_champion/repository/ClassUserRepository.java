@@ -20,4 +20,12 @@ public interface ClassUserRepository extends JpaRepository<ClassUser, ClassUserI
 
     // Đếm số học viên trong 1 lớp từ bảng class_user
     long countByClassRoom(com.vti.vti_champion.entity.Class classRoom);
+
+    @Query("SELECT cu.student FROM ClassUser cu WHERE cu.classRoom.id = :classId")
+    List<User> findStudentsByClassId(@Param("classId") Integer classId);
+
+    @org.springframework.transaction.annotation.Transactional
+    @org.springframework.data.jpa.repository.Modifying
+    @Query("DELETE FROM ClassUser cu WHERE cu.classRoom.id = :classId AND cu.student.id = :studentId")
+    void deleteByClassIdAndStudentId(@Param("classId") Integer classId, @Param("studentId") Integer studentId);
 }

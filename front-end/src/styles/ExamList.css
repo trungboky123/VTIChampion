@@ -251,12 +251,31 @@
 }
 
 .score-badge {
-  background: #f1f5f9;
-  color: #94a3b8;
   padding: 4px 10px;
   border-radius: 20px;
   font-size: 12px;
   font-weight: 800;
+  display: inline-block;
+}
+
+.score-badge.na {
+  background: #f1f5f9;
+  color: #94a3b8;
+}
+
+.score-badge.poor {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.score-badge.average {
+  background: #fef9c3;
+  color: #a16207;
+}
+
+.score-badge.good {
+  background: #dcfce7;
+  color: #16a34a;
 }
 
 .exam-status-cell {
@@ -452,4 +471,28 @@
   .table-header-custom, .table-row-custom {
     grid-template-columns: 1.5fr 80px 90px 90px 90px 120px;
   }
+}
+
+/* Custom Pagination Styles */
+.custom-pagination .ant-pagination-item-active {
+  border-color: #2563eb !important;
+  background-color: #2563eb !important;
+}
+
+.custom-pagination .ant-pagination-item-active a {
+  color: white !important;
+}
+
+.custom-pagination .ant-pagination-item:hover {
+  border-color: #2563eb !important;
+}
+
+.custom-pagination .ant-pagination-item:hover a {
+  color: #2563eb !important;
+}
+
+.custom-pagination .ant-pagination-prev:hover .ant-pagination-item-link,
+.custom-pagination .ant-pagination-next:hover .ant-pagination-item-link {
+  color: #2563eb !important;
+  border-color: #2563eb !important;
 }
