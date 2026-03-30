@@ -20,7 +20,7 @@ import {
   ShareAltOutlined,
 } from "@ant-design/icons";
 import "../../styles/Admin.css";
-import examApi from "../../api/examApi";
+import examApi from "../../api/ExamApi";
 
 const { Option } = Select;
 
