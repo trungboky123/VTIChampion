@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="6cfae33a-945d-4364-b048-7e4c14cc159d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/front-end/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/front-end/src/pages/Admin/ExamManagement.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/pages/Admin/ExamManagement.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/pages/Instructor/ClassDetail.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/pages/Instructor/ClassDetail.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/pages/Instructor/ExamList.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/pages/Instructor/ExamList.jsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/front-end/src/pages/Instructor/TeacherDashboard.jsx" beforeDir="false" afterPath="$PROJECT_DIR$/front-end/src/pages/Instructor/TeacherDashboard.jsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -73,7 +76,7 @@
 }]]></component>
   <component name="RunManager" selected="Spring Boot.Main">
     <configuration name="Main" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" temporary="true" nameIsGenerated="true">
-      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UnknownPolicyInFreeMode" />
+      <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="back-end" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.vti.vti_champion.Main" />
       <extension name="coverage">
@@ -88,7 +91,7 @@
     </configuration>
     <configuration name="op]" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
-      <module name="Module7_Mock_Project" />
+      <module name="back-end" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="com.vti.vti_champion.Main" />
       <method v="2">
         <option name="Make" enabled="true" />
@@ -116,7 +119,7 @@
       <option name="presentableId" value="Default" />
       <updated>1773406918899</updated>
       <workItem from="1773413997252" duration="176000" />
-      <workItem from="1774855558066" duration="394000" />
+      <workItem from="1774855558066" duration="2219000" />
     </task>
     <servers />
   </component>
