@@ -15,6 +15,8 @@ const classApi = {
     delete: (id) => axiosClient.delete(`/admin/delete-class/${id}`),
     addStudentsToClass: (data) => axiosClient.post("/admin/add-students-to-class", data),
     getUnassignedStudents: () => axiosClient.get("/admin/unassigned-students"),
+    // addStudentsToClass: (classId, studentIds) => axiosClient.post("/admin/add-students-to-class", { classId, studentIds }),
+    getMyClass: () => axiosClient.get("/classes/my-class"),
 };
 
 export default classApi;

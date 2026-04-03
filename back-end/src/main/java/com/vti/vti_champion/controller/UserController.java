@@ -28,6 +28,7 @@ import java.util.Map;
 public class UserController {
 
     private final UserService userService;
+    private final com.vti.vti_champion.repository.ClassUserRepository classUserRepository;
 
     @GetMapping("/me")
     public ResponseEntity<?> getMe(Authentication authentication) {
@@ -50,7 +51,16 @@ public class UserController {
         settingResponse.setName(user.getRole().getName().toString());
         userResponse.setRole(settingResponse);
 
-        return ResponseEntity.ok(Map.of(
+        // Kiểm tra xem học viên đã thuộc lớp nào chưa (case-insensitive)
+        String roleName = user.getRole().getName().trim().toUpperCase();
+        if ("STUDENT".equals(roleName)) {
+            boolean hasClass = classUserRepository.existsByStudentId(userDetails.getId());
+            userResponse.setHasClass(hasClass);
+        } else {
+            userResponse.setHasClass(true); // Admin, Teacher luôn có quyền truy cập
+        }
+
+        return  ResponseEntity.ok(Map.of(
                 "message", "Get thông tin user thành công",
                 "data", userResponse));
     }

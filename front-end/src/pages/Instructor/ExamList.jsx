@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import examApi from '../../api/examApi';
+import examApi from '../../api/ExamApi';
 import resultApi from '../../api/resultApi';
 import userApi from '../../api/userApi';
 import { message, Modal, Pagination } from 'antd';
