@@ -32,3 +32,8 @@ build/
 ### VS Code ###
 .vscode/
 ../.env
+
+node_modules/
+front-end/node_modules/
+back-end/target/
+*.log
