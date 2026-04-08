@@ -1,6 +1,7 @@
 package com.vti.vti_champion.service.interfaces;
 
 import com.vti.vti_champion.dto.request.CreateQuestionRequest;
+import com.vti.vti_champion.dto.request.FilterQuestionRequest;
 import com.vti.vti_champion.dto.request.UpdateQuestionRequest;
 import com.vti.vti_champion.dto.response.ImportResponse;
 import com.vti.vti_champion.dto.response.PracticeQuestionResponse;
@@ -30,4 +31,6 @@ public interface IQuestionService {
 
     //
     byte[] downloadTemplate();
+
+    Page<QuestionResponse> getAllQuestions(FilterQuestionRequest request, Pageable pageable);
 }

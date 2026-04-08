@@ -237,10 +237,25 @@
   margin-bottom: 16px;
 }
 
-.icon-blue { background: #eff6ff; color: #2563eb; }
-.icon-green { background: #dcfce7; color: #16a34a; }
-.icon-yellow { background: #fef9c3; color: #ca8a04; }
-.icon-purple { background: #f3e8ff; color: #9333ea; }
+.icon-blue {
+  background: #eff6ff;
+  color: #2563eb;
+}
+
+.icon-green {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.icon-yellow {
+  background: #fef9c3;
+  color: #ca8a04;
+}
+
+.icon-purple {
+  background: #f3e8ff;
+  color: #9333ea;
+}
 
 .admin-stat-card .value {
   font-size: 32px;
@@ -267,8 +282,15 @@
   border-radius: 20px;
 }
 
-.trend.up { background: #dcfce7; color: #16a34a; }
-.trend.down { background: #fee2e2; color: #dc2626; }
+.trend.up {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.trend.down {
+  background: #fee2e2;
+  color: #dc2626;
+}
 
 /* Dashboard Charts & Tables Area */
 .admin-dashboard-row {
@@ -360,7 +382,7 @@
   padding: 16px 24px;
   border-radius: 16px;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
 }
 
 .admin-filter-search {
@@ -392,11 +414,12 @@
   border-radius: 16px !important;
   overflow: hidden;
   border: 1px solid #e2e8f0 !important;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
 }
 
-.premium-table .ant-table-thead > tr > th {
-  background: #1d4ed8 !important; /* Rich blue background */
+.premium-table .ant-table-thead>tr>th {
+  background: #1d4ed8 !important;
+  /* Rich blue background */
   color: white !important;
   font-weight: 700 !important;
   text-transform: uppercase !important;
@@ -406,14 +429,14 @@
   border-bottom: none !important;
 }
 
-.premium-table .ant-table-tbody > tr > td {
+.premium-table .ant-table-tbody>tr>td {
   padding: 16px 24px !important;
   border-bottom: 1px solid #eff6ff !important;
   color: #1e293b;
   font-weight: 500;
 }
 
-.premium-table .ant-table-tbody > tr:hover > td {
+.premium-table .ant-table-tbody>tr:hover>td {
   background: #f8fafc !important;
 }
 
@@ -454,13 +477,14 @@
   background: #ef4444;
   color: white;
 }
+
 .admin-table .ant-table {
   border-radius: 16px;
   overflow: hidden;
   border: 2px solid var(--blue-100, #dbeafe);
 }
 
-.admin-table .ant-table-thead > tr > th {
+.admin-table .ant-table-thead>tr>th {
   background: var(--gray-50, #f8fafc) !important;
   color: var(--gray-500, #64748b) !important;
   font-weight: 700 !important;
@@ -471,14 +495,14 @@
   border-bottom: 2px solid var(--blue-100, #dbeafe) !important;
 }
 
-.admin-table .ant-table-tbody > tr > td {
+.admin-table .ant-table-tbody>tr>td {
   padding: 16px 24px !important;
   border-bottom: 1px solid var(--blue-50, #eff6ff) !important;
   color: var(--gray-800, #1e293b);
   font-weight: 500;
 }
 
-.admin-table .ant-table-tbody > tr:hover > td {
+.admin-table .ant-table-tbody>tr:hover>td {
   background: var(--blue-50, #eff6ff) !important;
 }
 
@@ -493,8 +517,15 @@
   gap: 6px;
 }
 
-.status-active { background: #dcfce7; color: #16a34a; }
-.status-blocked { background: #fee2e2; color: #dc2626; }
+.status-active {
+  background: #dcfce7;
+  color: #16a34a;
+}
+
+.status-blocked {
+  background: #fee2e2;
+  color: #dc2626;
+}
 
 /* Buttons */
 .admin-btn-primary {
@@ -536,34 +567,36 @@
   color: var(--blue-600, #2563eb);
   background: var(--blue-50, #eff6ff);
 }
+
 /* ===================== RESPONSIVE ===================== */
 @media (max-width: 1024px) {
   .admin-sidebar {
     transform: translateX(-100%);
     width: 240px;
   }
-  
+
   .admin-sidebar.mobile-open {
     transform: translateX(0);
-    box-shadow: 20px 0 50px rgba(0,0,0,0.1);
+    box-shadow: 20px 0 50px rgba(0, 0, 0, 0.1);
   }
-  
+
   .admin-main {
     margin-left: 0;
   }
-  
+
   .admin-header {
     padding: 0 16px;
   }
-  
+
   .admin-header-search {
-    display: none; /* Hide search on mobile header to save space */
+    display: none;
+    /* Hide search on mobile header to save space */
   }
-  
+
   .admin-stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .admin-dashboard-row {
     grid-template-columns: 1fr;
   }
@@ -571,7 +604,7 @@
   .admin-content-area {
     padding: 20px 16px;
   }
-  
+
   .admin-page-header {
     flex-direction: column;
     align-items: flex-start;
@@ -583,15 +616,16 @@
   .admin-stats-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .admin-header-right {
     gap: 12px;
   }
-  
+
   .admin-notification {
-    display: none; /* Hide notification on very small screens */
+    display: none;
+    /* Hide notification on very small screens */
   }
-  
+
   .admin-page-title {
     font-size: 20px;
   }
@@ -600,7 +634,7 @@
   .admin-table .ant-table {
     overflow-x: auto;
   }
-  
+
   .admin-filter-bar {
     flex-direction: column;
     align-items: stretch;
@@ -627,8 +661,11 @@
 .admin-sidebar-overlay {
   display: none;
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.4);
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
   backdrop-filter: blur(2px);
   z-index: 95;
 }
@@ -638,96 +675,68 @@
     display: block;
   }
 }
-.exam-mgt-title-wrap { display: flex; align-items: center; gap: 10px; }
-.exam-mgt-title-icon { padding: 8px; background: #fff7ed; border-radius: 8px; color: #ea580c; }
-.exam-mgt-title-text { font-weight: 700; color: #1e293b; }
-.exam-mgt-actions-wrap { display: flex; gap: 8px; }
-.exam-mgt-icon-edit { color: #3b82f6; }
-.exam-mgt-icon-share { color: #10b981; }
-.exam-mgt-search { width: 350px; }
-.exam-mgt-select { width: 180px; }
-.exam-mgt-modal-title { font-size: 20px; font-weight: 800; }
-.exam-mgt-form { margin-top: 20px; }
-.exam-mgt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-.exam-mgt-input-number { width: 100%; }
-.exam-mgt-form-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 32px; }
 
-/* Premium Modal Enhancements */
-.premium-modal .ant-modal-content {
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  padding: 0;
+.exam-mgt-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-.premium-modal .ant-modal-header {
-  padding: 24px 32px;
-  margin-bottom: 0;
-  border-bottom: 1px solid #f1f5f9;
-  background: #f8fafc;
+.exam-mgt-title-icon {
+  padding: 8px;
+  background: #fff7ed;
+  border-radius: 8px;
+  color: #ea580c;
 }
 
-.premium-modal .ant-modal-title {
-  font-family: 'Inter', sans-serif;
-  color: #0f172a;
-}
-
-.premium-modal .ant-modal-body {
-  padding: 32px;
-}
-
-.premium-modal .ant-modal-close {
-  top: 16px;
-  right: 16px;
-}
-
-.premium-modal .ant-form-item-label label {
+.exam-mgt-title-text {
   font-weight: 700;
-  color: #475569;
-  font-size: 14px;
+  color: #1e293b;
 }
 
-.premium-modal .ant-input, 
-.premium-modal .ant-input-password,
-.premium-modal .ant-select-selector {
-  border-radius: 12px !important;
-  border: 1.5px solid #e2e8f0 !important;
-  padding: 8px 16px !important;
-  font-weight: 500;
+.exam-mgt-actions-wrap {
+  display: flex;
+  gap: 8px;
 }
 
-.premium-modal .ant-input:focus,
-.premium-modal .ant-select-focused .ant-select-selector {
-  border-color: #3b82f6 !important;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1) !important;
+.exam-mgt-icon-edit {
+  color: #3b82f6;
 }
 
-/* Base style for confirmation dialogs */
-.ant-modal-confirm-premium .ant-modal-content {
-  border-radius: 20px !important;
-  padding: 32px !important;
+.exam-mgt-icon-share {
+  color: #10b981;
 }
 
-.ant-modal-confirm-premium .ant-modal-confirm-title {
-  font-size: 20px !important;
-  font-weight: 800 !important;
-  color: #0f172a !important;
+.exam-mgt-search {
+  width: 350px;
 }
 
-.ant-modal-confirm-premium .ant-modal-confirm-content {
-  margin-top: 12px !important;
-  color: #64748b !important;
-  font-size: 15px !important;
+.exam-mgt-select {
+  width: 180px;
 }
 
-.ant-modal-confirm-premium .ant-modal-confirm-btns {
-  margin-top: 32px !important;
+.exam-mgt-modal-title {
+  font-size: 20px;
+  font-weight: 800;
 }
 
-.ant-modal-confirm-premium .ant-btn {
-  height: 48px !important;
-  padding: 0 24px !important;
-  border-radius: 12px !important;
-  font-weight: 700 !important;
-  font-size: 15px !important;
+.exam-mgt-form {
+  margin-top: 20px;
+}
+
+.exam-mgt-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.exam-mgt-input-number {
+  width: 100%;
+}
+
+.exam-mgt-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 32px;
 }
