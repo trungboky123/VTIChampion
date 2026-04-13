@@ -65,4 +65,14 @@ public class CustomUserDetails implements UserDetails {
     public String getUsername() {
         return username;
     }
+
+    public boolean isAdmin() {
+        return authorities.stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
+    }
+
+    public boolean isTeacher() {
+        return authorities.stream()
+                .anyMatch(a -> a.getAuthority().equals("ROLE_TEACHER"));
+    }
 }

@@ -39,6 +39,9 @@ public class Exam {
     @Column(name = "max_attempts", columnDefinition = "int default 1")
     private Integer maxAttempts = 1;
 
+    @Column(name = "is_deleted")
+    private Boolean isDeleted = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "teacher_id")
     private User teacher;
@@ -47,6 +50,6 @@ public class Exam {
     @JoinColumn(name = "class_id")
     private Class classRoom;
 
-    @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "exam", cascade = CascadeType.ALL)
     private List<Question> questions; // Cascade ALL ở đây để khi xóa Question thì mới mất Answer
 }

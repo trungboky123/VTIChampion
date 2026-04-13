@@ -115,17 +115,40 @@ public class ExamService implements IExamService {
     }
 
     @Override
-    public Page<ExamResponse> getAllExams(
-            String keyword, Integer classId, Integer teacherId,
-            LocalDate startDate, LocalDate endDate, Pageable pageable) {
+    public Page<ExamResponse> getAllExamsForTeacherOrAdmin(
+            String keyword,
+            Integer classId,
+            LocalDate startDate,
+            LocalDate endDate,
+            Pageable pageable,
+            String role,
+            Integer currentId) {
 
         LocalDateTime start = (startDate != null) ? startDate.atStartOfDay() : null;
         LocalDateTime end = (endDate != null) ? endDate.atStartOfDay() : null;
 
-        Specification<Exam> spec = Specification.where(ExamSpecification.hasKeyword(keyword))
-                .and(ExamSpecification.hasClassId(classId))
-                .and(ExamSpecification.hasCreatorId(teacherId))
-                .and(ExamSpecification.createdBeetween(start, end));
+        Specification<Exam> spec = Specification.where(((root, query, cb) -> cb.conjunction()));
+
+        if (keyword != null && !keyword.isEmpty()) {
+            spec = spec.and(ExamSpecification.hasKeyword(keyword));
+        }
+
+        if (role != null && role.contains("ADMIN")) {
+
+            if (classId != null) {
+                spec = spec.and(ExamSpecification.hasClassId(classId));
+            }
+
+        } else {
+            spec = spec.and(ExamSpecification.isDeleted());
+            spec = spec.and(ExamSpecification.hasCreatorId(currentId));
+
+            if (classId != null) {
+                spec = spec.and(ExamSpecification.hasClassId(classId));
+            }
+        }
+
+        spec = spec.and(ExamSpecification.createdBeetween(start, end));
 
         return examRepository.findAll(spec, pageable).map(exam -> {
             ExamResponse response = modelMapper.map(exam, ExamResponse.class);
@@ -134,7 +157,7 @@ public class ExamService implements IExamService {
                 response.setClassName(exam.getClassRoom().getName());
             if (exam.getTeacher() != null)
                 response.setCreatorName(exam.getTeacher().getFullname());
-            
+
             if (exam.getType() != null)
                 response.setType(exam.getType().name());
 
@@ -148,7 +171,8 @@ public class ExamService implements IExamService {
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy bài thi ID: " + examId));
 
-        examRepository.delete(exam);
+        exam.setIsDeleted(true);
+        examRepository.save(exam);
     }
 
     @Override
@@ -158,9 +182,27 @@ public class ExamService implements IExamService {
         Exam exam = examRepository.findById(examId)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy bài thi!"));
 
+        if (exam.getQuestions() != null) {
+            for (Question oldQ : exam.getQuestions()) {
+                // Ngắt Answer khỏi Question cũ
+                if (oldQ.getAnswers() != null) {
+                    for (Answer oldA : oldQ.getAnswers()) {
+                        oldA.setQuestion(null);
+                    }
+                    oldQ.getAnswers().clear();
+                }
+                // Ngắt Question khỏi Exam
+                oldQ.setExam(null);
+            }
+            exam.getQuestions().clear();
+        }
+
+        examRepository.saveAndFlush(exam);
+
         // 3. CHUẨN BỊ BẢN SAO MỚI (Logic này sẽ tạo ra dòng mới trong DB)
         List<Question> clonedQuestions = new ArrayList<>();
-        for (Integer qId : request.getQuestionIds()) {
+        for (
+                Integer qId : request.getQuestionIds()) {
             Question originalQuestion = questionRepository.findById(qId)
                     .orElseThrow(() -> new RuntimeException("Câu hỏi ID " + qId + " không tồn tại!"));
 
@@ -186,35 +228,30 @@ public class ExamService implements IExamService {
             clonedQuestions.add(cloneQ);
         }
 
-        // 4. XOÁ CÁC BẢN SAO CŨ CỦA EXAM NÀY (Để thay thế bằng bộ mới)
-        // Đảm bảo trong Exam entity có orphanRemoval = true
-        exam.getQuestions().clear();
-        // Flush để xóa sạch các câu cũ trong DB trước khi thêm mới, tránh lỗi FK
-        examRepository.saveAndFlush(exam);
-
         // 5. CẬP NHẬT THÔNG TIN VÀ THÊM CÂU HỎI MỚI
         exam.setTitle(request.getTitle().trim());
         exam.setCode(request.getCode().toUpperCase());
         exam.setDuration(request.getDuration());
-
         if (request.getMaxAttempts() != null && request.getMaxAttempts() > 0) {
             exam.setMaxAttempts(request.getMaxAttempts());
         }
 
         try {
             exam.setType(com.vti.vti_champion.constant.Type.valueOf(request.getType()));
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             // keep existing type
         }
 
         exam.getQuestions().addAll(clonedQuestions);
 
-        // 6. LƯU LẠI
-        // examRepository.save(exam);
-
         ExamResponse response = modelMapper.map(exam, ExamResponse.class);
-        response.setClassName(exam.getClassRoom().getName());
-        if (exam.getType() != null) response.setType(exam.getType().name());
+        response.setClassName(exam.getClassRoom().
+
+                getName());
+        if (exam.getType() != null) response.setType(exam.getType().
+
+                name());
         return response;
     }
 
@@ -222,12 +259,12 @@ public class ExamService implements IExamService {
     public ExamResponse getExamById(Integer id) {
         Exam exam = examRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Không tìm thấy bài thi!"));
-        
+
         ExamResponse response = modelMapper.map(exam, ExamResponse.class);
         if (exam.getTeacher() != null) response.setCreatorName(exam.getTeacher().getFullname());
         if (exam.getClassRoom() != null) response.setClassName(exam.getClassRoom().getName());
         if (exam.getType() != null) response.setType(exam.getType().name());
-        
+
         return response;
     }
 }
