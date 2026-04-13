@@ -1,5 +1,7 @@
 package com.vti.vti_champion.controller;
 
+import com.sun.security.auth.UserPrincipal;
+import com.vti.vti_champion.configuration.CustomUserDetails;
 import com.vti.vti_champion.dto.request.CreateExamRequest;
 import com.vti.vti_champion.dto.request.UpdateExamRequest;
 import com.vti.vti_champion.dto.response.ExamResponse;
@@ -10,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -31,9 +35,9 @@ public class ExamController {
 
     @GetMapping("/getAll")
     public ResponseEntity<Page<ExamResponse>> getAllExams(
+            @AuthenticationPrincipal CustomUserDetails currentUser,
             @RequestParam(required = false) String keyword,
             @RequestParam(required = false) Integer classId,
-            @RequestParam(name = "teacher_id", required = false) Integer teacherId,
 
             @RequestParam(required = false)
             @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
@@ -44,7 +48,11 @@ public class ExamController {
             Pageable pageable
     ) {
 
-        Page<ExamResponse> response = examService.getAllExams(keyword, classId, teacherId, startDate, endDate, pageable);
+        String role = currentUser.isAdmin() ? "ADMIN" : "TEACHER";
+
+        Integer currentId = currentUser.getId();
+
+        Page<ExamResponse> response = examService.getAllExamsForTeacherOrAdmin(keyword, classId, startDate, endDate, pageable, role, currentId);
         return ResponseEntity.ok(response);
     }
 

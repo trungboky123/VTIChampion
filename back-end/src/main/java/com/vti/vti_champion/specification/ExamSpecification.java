@@ -37,6 +37,12 @@ public class ExamSpecification {
         };
     }
 
+    public static Specification<Exam> isDeleted() {
+        return ((root, query, cb) -> {
+            return cb.equal(root.get("isDeleted"), false);
+        });
+    }
+
     // 4. Lọc theo khoảng thời gian
     public static Specification<Exam> createdBeetween(LocalDateTime startDate, LocalDateTime endDate) {
         return (root, query, cb) -> {

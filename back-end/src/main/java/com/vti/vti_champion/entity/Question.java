@@ -46,6 +46,6 @@ public class Question {
 
     // Quan hệ với Answer (Một câu hỏi có nhiều câu trả lời)
     // CascadeType.ALL: Khi lưu Question sẽ tự động lưu các Answer đi kèm
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL)
     private List<Answer> answers = new ArrayList<>();
 }
